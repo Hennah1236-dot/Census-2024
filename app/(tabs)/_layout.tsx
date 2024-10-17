@@ -1,12 +1,37 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { SplashScreen, Tabs } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import SplashScreenComponent from '@/components/SplashScreenComponent';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+
+  const [isAppReady, setIsAppReady] = useState(false);
+
+  useEffect(() => {
+    // Simulate loading of assets (optional)
+    async function prepare() {
+      try {
+        // Simulate a delay (e.g., loading images)
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setIsAppReady(true); // Resources are loaded, app is ready
+        await SplashScreen.hideAsync(); // Hide splash screen
+      }
+    }
+
+    prepare(); // Start the resource loading
+  }, []);
+
+  if (!isAppReady) {
+    // If the app is not ready, show the SplashScreen component
+    return <SplashScreenComponent />;
+  }
 
   return (
     <Tabs
@@ -23,7 +48,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
@@ -31,7 +56,11 @@ export default function TabLayout() {
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),
         }}
-      />
+      /> */}
     </Tabs>
   );
 }
+function setIsAppReady(arg0: boolean) {
+  throw new Error('Function not implemented.');
+}
+
